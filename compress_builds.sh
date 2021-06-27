@@ -1,18 +1,21 @@
 #!/bin/bash
 
-builddir="${1}"
+base_dir="${1}"
+if [[ -z "${base_dir}" ]]; then
+    base_dir="${BASE_DIR}"
+fi
 
-if [[ -z "${builddir}" ]]; then
+if [[ -z "${base_dir}" ]]; then
     echo -e "\nerror, please specify dir containing the builds\n"
     exit 1
 fi
 
-appname="$(echo ${basedir} | grep -Po "[^/]+$")"
+appname="$(echo ${base_dir} | grep -Po "[^/]+$")"
 tmpdir="/tmp/assets"
 
 function getver() {
     f=$(
-        find "${builddir}" -type f -executable | grep "$(arch)" | head -n 1
+        find "${base_dir}" -type f -executable | grep "$(arch)" | head -n 1
     )
     eval "${f}" -V | grep -Po "(?<=Version:\s).*"
 }
@@ -25,7 +28,7 @@ function rcmd() {
 ver=$(getver)
 mkdir -p "${tmpdir}"
 
-for fol in $(find "${builddir}" -maxdepth 1 -mindepth 1 -type d); do
+for fol in $(find "${base_dir}" -maxdepth 1 -mindepth 1 -type d); do
     farch=$(echo "${fol}" | grep -Po "[^/]+$")
     cd "${fol}"
     rcmd "tar -zcvf ${tmpdir}/${appname}_v${ver}_${farch}.tar.gz *"
