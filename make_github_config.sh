@@ -1,6 +1,6 @@
 #!/bin/bash
 
-tf="~/.gitconfig"
+tf="${HOME}/.gitconfig"
 
 echo "[user]" > "${tf}"
 echo "name = olaf michaelis" >> "${tf}"
