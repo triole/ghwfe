@@ -1,5 +1,7 @@
 #!/bin/bash
 
+tmpdir="/tmp/assets"
+
 base_dir="${1}"
 if [[ -z "${base_dir}" ]]; then
     base_dir="${BASE_DIR}"
@@ -18,8 +20,7 @@ if [[ -z "${base_dir}" ]]; then
     exit 1
 fi
 
-appname="$(echo ${base_dir} | grep -Po "[^/]+$")"
-tmpdir="/tmp/assets"
+appname="$(echo ${base_dir} | grep -Po ".*(?=\/)" | grep -Po "[^/]+$")"
 
 function getver() {
     fil=$(
