@@ -1,14 +1,27 @@
 #!/bin/bash
 
-url="${1}"
+# set and check args
+url="${URL}"
 grep_scheme="${2}"
 target_folder="${3}"
-strip_comp="${4}"
+strip_components="${4}"
 
-if [[ ${strip_comp} =~ ^[0-9]+ ]]; then
-    strip_comp="--strip-components=${strip_comp}"
+if [[ -z "${url}" ]]; then
+    url="${URL}"
+fi
+if [[ -z "${grep_scheme}" ]]; then
+    grep_scheme="${GREP_SCHEME}"
+fi
+if [[ -z "${target_folder}" ]]; then
+    target_folder="${TARGET_FOLDER}"
+fi
+if [[ -z "${strip_components}" ]]; then
+    strip_components="${STRIP_COMPONENTS}"
+fi
+if [[ ${strip_components} =~ ^[0-9]+ ]]; then
+    strip_components="--strip-components=${strip_components}"
 else
-    strip_comp=""
+    strip_components=""
 fi
 
 if [[ -z "${target_folder}" ]]; then
@@ -21,6 +34,7 @@ if [[ -z "${target_folder}" ]]; then
     exit 1
 fi
 
+# functions and main
 function install() {
     mkdir -p "${target_folder}"
     url_prefix="https://github.com"
@@ -31,7 +45,7 @@ function install() {
     )"
 
     curl -L ${bin_url} -o "${tmpfil}" &&
-        tar xvf "${tmpfil}" -C "${target_folder}" ${strip_comp}
+        tar xvf "${tmpfil}" -C "${target_folder}" ${strip_components}
 }
 
 install
