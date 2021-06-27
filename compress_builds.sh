@@ -5,6 +5,10 @@ if [[ -z "${base_dir}" ]]; then
     base_dir="${BASE_DIR}"
 fi
 
+if [[ "${base_dir:0:1}" != "/" ]]; then
+    base_dir="$(pwd)/${base_dir}"
+fi
+
 if [[ -z "${base_dir}" ]]; then
     echo -e "\nerror, please specify dir containing the builds\n"
     exit 1
