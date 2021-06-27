@@ -18,10 +18,11 @@ appname="$(echo ${base_dir} | grep -Po "[^/]+$")"
 tmpdir="/tmp/assets"
 
 function getver() {
-    f=$(
-        find "${base_dir}" -type f -executable | grep "$(arch)" | head -n 1
+    fil=$(
+        find "${base_dir}" -type f -executable |
+            grep "linux_$(arch)" | head -n 1
     )
-    eval "${f}" -V | grep -Po "(?<=Version:\s).*"
+    eval "${fil}" -V | grep -Po "(?<=Version:\s).*"
 }
 
 function rcmd() {
@@ -30,6 +31,10 @@ function rcmd() {
 }
 
 ver=$(getver)
+echo $ver
+if [[ -z "${ver}" ]]; then
+    exit 1
+fi
 mkdir -p "${tmpdir}"
 
 for fol in $(find "${base_dir}" -maxdepth 1 -mindepth 1 -type d); do

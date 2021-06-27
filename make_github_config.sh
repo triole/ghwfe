@@ -2,6 +2,6 @@
 
 tf="${HOME}/.gitconfig"
 
-echo "[user]" > "${tf}"
-echo "name = olaf michaelis" >> "${tf}"
-echo "email = o.mic@web.de" >> "${tf}"
+echo "[user]" >"${tf}"
+echo "name = olaf michaelis" >>"${tf}"
+echo "email = o.mic@web.de" >>"${tf}"
