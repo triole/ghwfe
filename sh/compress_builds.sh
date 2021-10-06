@@ -25,7 +25,7 @@ appname="$(echo ${base_dir} | grep -Po ".*(?=\/)" | grep -Po "[^/]+$")"
 version_no=$(eval "${VERSION_COMMAND}")
 if [[ -z "${version_no}" ]]; then
     bin=$(
-        find "$(realpath ${base_dir}/build)" -type f -executable |
+        find "$(realpath ${base_dir})" -type f -executable |
             grep "linux_$(arch)"
     )
     version_no="$(
