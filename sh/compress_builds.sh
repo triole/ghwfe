@@ -2,13 +2,6 @@
 
 tempdir="/tmp/assets"
 
-ver=$(eval "${VERSION_COMMAND}")
-echo ${ver}
-if [[ -z "${ver}" ]]; then
-    echo "Software version required. Please specify \$VERSION_COMMAND"
-    exit 1
-fi
-
 base_dir="${1}"
 if [[ -z "${base_dir}" ]]; then
     base_dir="${BASE_DIR}"
@@ -29,6 +22,17 @@ fi
 
 appname="$(echo ${base_dir} | grep -Po ".*(?=\/)" | grep -Po "[^/]+$")"
 
+version_no=$(eval "${VERSION_COMMAND}")
+if [[ -z "${version_no}" ]]; then
+    bin=$(
+        find "$(realpath ${base_dir}/build)" -type f -executable |
+            grep "linux_$(arch)"
+    )
+    version_no="$(
+        ${bin} -V | grep -Pi "^version" | grep -Po "[^:]+$" | sed 's/^[ t]*//;s/[ t]*$//'
+    )"
+fi
+
 function rcmd() {
     echo -e "\n\033[0;93m${1}\033[0m"
     eval ${1}
@@ -38,7 +42,7 @@ mkdir -p "${tempdir}"
 
 for fol in $(find "${base_dir}" -maxdepth 1 -mindepth 1 -type d); do
     farch=$(echo "${fol}" | grep -Po "[^/]+$")
-    tf="${appname}_v${ver}_${farch}"
+    tf="${appname}_v${version_no}_${farch}"
     cd "${fol}"
     find "${fol}" -mindepth 1 -maxdepth 1 -type f -executable |
         head -n 1 |

@@ -44,7 +44,7 @@ done
 function rcmd() {
     echo "${1}"
     if [[ "${debug}" == "false" ]]; then
-        eval "${1}"
+        eval ${1}
     fi
 }
 
@@ -52,17 +52,19 @@ cd "${source_folder}"
 rcmd "${gobin} mod init ${app_name}"
 rcmd "${gobin} mod tidy"
 
-export CGO_ENABLED=0
 for arch in "${architectures[@]}"; do
     arch_name="$(echo "${arch}" | grep -Po ".*(?=:)")"
     arch="$(echo "${arch}" | grep -Po "[^:]+$")"
-
-    rcmd "${gobin} build -o ${target_folder}/${arch_name}/${app_name} \
+    rcmd "CGO_ENABLED=0 ${arch} ${gobin} build -o ${target_folder}/${arch_name}/${app_name} \
         -ldflags \
         \"-s -w -X 'main.BUILDTAGS={
             _subversion: ${ld_git_commit_no}, author: ${ld_author},
             build date: ${ld_date}, git hash: ${ld_git_commit_hash},
         }'\" \
         src/*.go"
-
 done
+
+find "$(realpath ${target_folder})" -type f -executable \
+    -exec echo '' \; \
+    -exec md5sum {} \; \
+    -exec file {} \;
