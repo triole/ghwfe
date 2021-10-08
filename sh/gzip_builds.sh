@@ -29,7 +29,8 @@ if [[ -z "${version_no}" ]]; then
             grep "linux_$(arch)"
     )
     version_no="$(
-        ${bin} -V | grep -Pi "^version" | grep -Po "[^:]+$" | sed 's/^[ t]*//;s/[ t]*$//'
+        ${bin} -V |
+            grep -v "go version" | grep -Poi "version.*" | grep -Po "[^\s]+$"
     )"
 fi
 
