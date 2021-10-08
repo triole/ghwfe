@@ -34,6 +34,8 @@ if [[ ! -f "${gobin}" ]]; then
     gobin="$(which go)"
 fi
 
+goversion="$(${gobin} version | grep -Po "(?<=go)[0-9\.]+")"
+
 debug="false"
 for val in "$@"; do
     if [[ "${val}" =~ ^-+(d|debug)$ ]]; then
@@ -60,6 +62,7 @@ for arch in "${architectures[@]}"; do
         \"-s -w -X 'main.BUILDTAGS={
             _subversion: ${ld_git_commit_no}, author: ${ld_author},
             build date: ${ld_date}, git hash: ${ld_git_commit_hash},
+            go version: ${goversion}
         }'\" \
         src/*.go"
 done
