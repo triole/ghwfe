@@ -21,11 +21,12 @@ if [[ -z "${base_dir}" ]]; then
 fi
 
 appname="$(echo ${base_dir} | grep -Po ".*(?=\/)" | grep -Po "[^/]+$")"
+base_dir="$(realpath "${base_dir}")"
 
 version_no=$(eval "${VERSION_COMMAND}")
 if [[ -z "${version_no}" ]]; then
     bin=$(
-        find "$(realpath ${base_dir})" -type f -executable |
+        find "${base_dir}" -type f -executable |
             grep "linux_$(arch)"
     )
     version_no="$(
@@ -33,6 +34,9 @@ if [[ -z "${version_no}" ]]; then
             grep -v "go version" | grep -Poi "version.*" | grep -Po "[^\s]+$"
     )"
 fi
+
+echo "Base dir: ${base_dir}"
+echo "Version : ${version_no}"
 
 function rcmd() {
     echo -e "\n\033[0;93m${1}\033[0m"
