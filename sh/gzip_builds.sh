@@ -49,6 +49,7 @@ for fol in $(find "${base_dir}" -maxdepth 1 -mindepth 1 -type d); do
     farch=$(echo "${fol}" | grep -Po "[^/]+$")
     tf="${appname}_v${version_no}_${farch}"
     cd "${fol}"
+    pwd
     find "${fol}" -mindepth 1 -maxdepth 1 -type f -executable |
         head -n 1 |
         xargs -i md5sum {} |
