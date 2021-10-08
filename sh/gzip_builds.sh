@@ -1,32 +1,35 @@
 #!/bin/bash
 
-tempdir="/tmp/assets"
-
-base_dir="${1}"
-if [[ -z "${base_dir}" ]]; then
-    base_dir="${BASE_DIR}"
+target_folder="${TARGET_FOLDER}"
+if [[ -z "${target_folder}" ]]; then
+    target_folder="/tmp/assets"
 fi
 
-if [[ "${base_dir:0:1}" != "/" ]]; then
-    base_dir="$(pwd)/${base_dir}"
+source_folder="${1}"
+if [[ -z "${source_folder}" ]]; then
+    source_folder="${SOURCE_FOLDER}"
 fi
 
-if [[ "${base_dir: -1}" == "/" ]]; then
-    base_dir="${base_dir:0:-1}"
+if [[ "${source_folder:0:1}" != "/" ]]; then
+    source_folder="$(pwd)/${source_folder}"
 fi
 
-if [[ -z "${base_dir}" ]]; then
+if [[ "${source_folder: -1}" == "/" ]]; then
+    source_folder="${source_folder:0:-1}"
+fi
+
+if [[ -z "${source_folder}" ]]; then
     echo -e "\nerror, please specify dir containing the builds\n"
     exit 1
 fi
 
-appname="$(echo ${base_dir} | grep -Po ".*(?=\/)" | grep -Po "[^/]+$")"
-base_dir="$(realpath "${base_dir}")"
+appname="$(echo ${source_folder} | grep -Po ".*(?=\/)" | grep -Po "[^/]+$")"
+source_folder="$(realpath "${source_folder}")"
 
 version_no=$(eval "${VERSION_COMMAND}")
 if [[ -z "${version_no}" ]]; then
     bin=$(
-        find "${base_dir}" -type f -executable |
+        find "${source_folder}" -type f -executable |
             grep "linux_$(arch)"
     )
     version_no="$(
@@ -35,7 +38,7 @@ if [[ -z "${version_no}" ]]; then
     )"
 fi
 
-echo "Base dir: ${base_dir}"
+echo "Base dir: ${source_folder}"
 echo "Version : ${version_no}"
 
 function rcmd() {
@@ -43,9 +46,9 @@ function rcmd() {
     eval ${1}
 }
 
-mkdir -p "${tempdir}"
+mkdir -p "${target_folder}"
 
-for fol in $(find "${base_dir}" -maxdepth 1 -mindepth 1 -type d); do
+for fol in $(find "${source_folder}" -maxdepth 1 -mindepth 1 -type d); do
     farch=$(echo "${fol}" | grep -Po "[^/]+$")
     tf="${appname}_v${version_no}_${farch}"
     cd "${fol}"
@@ -54,6 +57,6 @@ for fol in $(find "${base_dir}" -maxdepth 1 -mindepth 1 -type d); do
         head -n 1 |
         xargs -i md5sum {} |
         grep -Po "^[0-9a-f]+" \
-            >"${tempdir}/${tf}.md5"
-    rcmd "tar -zcvf ${tempdir}/${tf}.tar.gz *"
+            >"${target_folder}/${tf}.md5"
+    rcmd "tar -zcvf ${target_folder}/${tf}.tar.gz *"
 done
