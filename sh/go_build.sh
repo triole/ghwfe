@@ -20,11 +20,11 @@ ld_git_commit_hash=$(git rev-parse HEAD)
 ld_date=$(LANG=en_us_88591 date)
 
 source_folder="${SOURCE_FOLDER}"
-target_folder="${TARGET_FOLDER}"
-
 if [[ -z "${source_folder}" ]]; then
     source_folder="${GITHUB_WORKSPACE}"
 fi
+
+target_folder="${TARGET_FOLDER}"
 if [[ -z "${target_folder}" ]]; then
     target_folder="build"
 fi
@@ -44,15 +44,20 @@ for val in "$@"; do
 done
 
 function rcmd() {
-    echo "${1}"
+    cmd="$(echo ${1} | tr -d '\n' | sed 's/  \+/ /g')"
+    echo -e "\n\033[0;93m${cmd}\033[0m"
     if [[ "${debug}" == "false" ]]; then
-        eval ${1}
+        eval ${cmd}
     fi
 }
 
 cd "${source_folder}"
 rcmd "${gobin} mod init ${app_name}"
 rcmd "${gobin} mod tidy"
+
+echo -e "\nSource folder \"$(pwd)\" layout:"
+ls -la
+echo ""
 
 for arch in "${architectures[@]}"; do
     arch_name="$(echo "${arch}" | grep -Po ".*(?=:)")"
@@ -63,8 +68,7 @@ for arch in "${architectures[@]}"; do
             _subversion: ${ld_git_commit_no}, author: ${ld_author},
             build date: ${ld_date}, git hash: ${ld_git_commit_hash},
             go version: ${goversion}
-        }'\" \
-        *.go"
+        }'\""
 done
 
 find "$(realpath ${target_folder})" -type f -executable \
