@@ -64,7 +64,7 @@ for arch in "${architectures[@]}"; do
             build date: ${ld_date}, git hash: ${ld_git_commit_hash},
             go version: ${goversion}
         }'\" \
-        src/*.go"
+        *.go"
 done
 
 find "$(realpath ${target_folder})" -type f -executable \
