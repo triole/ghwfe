@@ -23,16 +23,19 @@ source_folder="${SOURCE_FOLDER}"
 if [[ -z "${source_folder}" ]]; then
     source_folder="${GITHUB_WORKSPACE}"
 fi
+source_folder=$(echo "${source_folder}" | envsubst)
 
 target_folder="${TARGET_FOLDER}"
 if [[ -z "${target_folder}" ]]; then
     target_folder="build"
 fi
+target_folder=$(echo "${target_folder}" | envsubst)
 
 gobin="${GO_BIN_PATH}"
 if [[ ! -f "${gobin}" ]]; then
     gobin="$(which go)"
 fi
+gobin=$(echo "${gobin}" | envsubst)
 
 goversion="$(${gobin} version | grep -Po "(?<=go)[0-9\.]+")"
 
