@@ -1,30 +1,18 @@
 #!/bin/bash
 
+source_folder="${SOURCE_FOLDER}"
+if [[ -z "${source_folder}" ]]; then
+    source_folder="build"
+fi
+source_folder="$(realpath "${source_folder}")"
+
 target_folder="${TARGET_FOLDER}"
 if [[ -z "${target_folder}" ]]; then
     target_folder="/tmp/assets"
 fi
-
-source_folder="${1}"
-if [[ -z "${source_folder}" ]]; then
-    source_folder="${SOURCE_FOLDER}"
-fi
-
-if [[ "${source_folder:0:1}" != "/" ]]; then
-    source_folder="$(pwd)/${source_folder}"
-fi
-
-if [[ "${source_folder: -1}" == "/" ]]; then
-    source_folder="${source_folder:0:-1}"
-fi
-
-if [[ -z "${source_folder}" ]]; then
-    echo -e "\nerror, please specify dir containing the builds\n"
-    exit 1
-fi
+target_folder="$(realpath "${target_folder}")"
 
 appname="$(echo ${source_folder} | grep -Po ".*(?=\/)" | grep -Po "[^/]+$")"
-source_folder="$(realpath "${source_folder}")"
 
 version_no=$(eval "${VERSION_COMMAND}")
 if [[ -z "${version_no}" ]]; then
