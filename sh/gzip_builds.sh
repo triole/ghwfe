@@ -16,14 +16,10 @@ appname="$(echo ${source_folder} | grep -Po ".*(?=\/)" | grep -Po "[^/]+$")"
 
 version_no=$(eval "${VERSION_COMMAND}")
 if [[ -z "${version_no}" ]]; then
-    bin=$(
-        find "${source_folder}" -type f -executable |
-            grep "linux_$(arch)"
-    )
-    version_no="$(
-        ${bin} -V |
-            grep -v "go version" | grep -Poi "version.*" | grep -Po "[^\s]+$"
-    )"
+    bin="$(find "${source_folder}" -type f -executable | grep "linux_$(arch)")"
+    cmd="${bin} -V | grep -v \"go version\" | grep -Poi \"version.*\" | grep -Po \"[^\s]+$\""
+    echo "Get version cmd: ${cmd}"
+    version_no="$(eval "${cmd}")"
 fi
 
 echo "Base dir: ${source_folder}"
