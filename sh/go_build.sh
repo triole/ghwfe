@@ -13,7 +13,10 @@ architectures=(
     "darwin_x86_64:GOOS=darwin GOARCH=amd64"
 )
 
-app_name=$(pwd | grep -Po "[^/]+$")
+app_name="${APP_NAME}"
+if [[ -z "${app_name}" ]]; then
+    app_name=$(pwd | grep -Po "[^/]+$")
+fi
 ld_author=$(grep -Po "(?<=name\s=\s).*" ~/.gitconfig)
 ld_git_commit_no=$(git rev-list "origin/master" --count --)
 ld_git_commit_hash=$(git rev-parse HEAD)
