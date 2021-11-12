@@ -19,7 +19,7 @@ if [[ -z "${version_no}" ]]; then
     bin="$(find "${source_folder}" -type f -executable | grep "linux_$(arch)")"
     cmd="${bin} -V | grep -v \"go version\" | grep -Poi \"version.*\" | grep -Po \"[^\s]+$\""
     echo "Get version cmd: ${cmd}"
-    version_no="$(eval "${cmd}")"
+    version_no="$(eval "${cmd}" || exit 1)"
 fi
 
 echo "Base dir: ${source_folder}"
