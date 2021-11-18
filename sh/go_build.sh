@@ -56,9 +56,18 @@ function rcmd() {
     fi
 }
 
+function update_modules() {
+    subfol_src="$(echo "${SOURCE_FOLDER}" | grep -Poc "src(/)?$")"
+    if [[ "${subfol_src}" == "1" ]]; then
+        cd ..
+    fi
+    rcmd "${gobin} mod init ${app_name}"
+    rcmd "${gobin} mod tidy"
+}
+
 cd "${source_folder}"
-rcmd "${gobin} mod init ${app_name}"
-rcmd "${gobin} mod tidy"
+update_modules
+cd "${source_folder}"
 
 echo -e "\nSource folder \"$(pwd)\" layout:"
 ls
