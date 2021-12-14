@@ -1,10 +1,12 @@
 #!/bin/bash
 
 # set and check args
-url="${URL}"
+url="${1}"
 grep_scheme="${2}"
 target_folder="${3}"
 strip_components="${4}"
+
+url_prefix="https://github.com"
 
 if [[ -z "${url}" ]]; then
     url="${URL}"
@@ -37,15 +39,26 @@ fi
 # functions and main
 function install() {
     mkdir -p "${target_folder}"
-    url_prefix="https://github.com"
-    tmpfil="/tmp/tmp_install.tar.gz"
 
-    bin_url="https://github.com/$(
+    tmpfil="/tmp/tmp_install.tar.gz"
+    echo "Fetch from    ${url_prefix}/${url}"
+    echo "Grep scheme   ${grep_scheme}"
+    bin_url="$(
         curl -Ls "${url_prefix}/${url}" | grep -Po "${grep_scheme}"
     )"
 
-    curl -L ${bin_url} -o "${tmpfil}" &&
-        tar xvf "${tmpfil}" -C "${target_folder}" ${strip_components}
+    if [[ -z "${bin_url}" ]]; then
+        echo "Unable to retrieve binary url. Fetch was empty."
+        exit 1
+    fi
+
+    bin_url="${url_prefix}/${bin_url}"
+    echo "Download      ${bin_url}"
+    curl -sL ${bin_url} -o "${tmpfil}" &&
+        tar xvf "${tmpfil}" -C "${target_folder}" ${strip_components} || (
+        echo "Extract failed."
+        file ${tmpfil}
+    )
 }
 
 install
