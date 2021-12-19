@@ -60,7 +60,11 @@ function install() {
         exit 1
     fi
 
-    bin_url="$(echo ${url_prefix}/${bin_url} | sed 's|/+|/|g')"
+    bin_url="$(
+        echo ${url_prefix}/${bin_url} | sed "s,//,/,g" |
+            sed "s,https:/,https://,g" |
+            grep -Po "^https?://[a-zA-Z0-9_\=\./]+"
+    )"
 
     echo "Download      ${bin_url}"
     curl -sL ${bin_url} -o "${tmpfil}" ||
