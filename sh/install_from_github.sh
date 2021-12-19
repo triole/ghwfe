@@ -60,7 +60,8 @@ function install() {
         exit 1
     fi
 
-    bin_url="${url_prefix}/${bin_url}"
+    bin_url="$(echo ${url_prefix}/${bin_url} | sed 's|/+|/|g')"
+
     echo "Download      ${bin_url}"
     curl -sL ${bin_url} -o "${tmpfil}" ||
         printerr "Download failed"
