@@ -37,6 +37,14 @@ if [[ -z "${target_folder}" ]]; then
 fi
 
 # functions and main
+function printerr() {
+    echo "${1}"
+    if [[ -z "${2}" ]]; then
+        eval "${2}"
+    fi
+    exit 1
+}
+
 function install() {
     mkdir -p "${target_folder}"
 
@@ -54,13 +62,10 @@ function install() {
 
     bin_url="${url_prefix}/${bin_url}"
     echo "Download      ${bin_url}"
-    curl -sL ${bin_url} -o "${tmpfil}" &&
-        echo "Extract ${tmpfil}" &&
-        tar xvf "${tmpfil}" -C "${target_folder}" ${strip_components} || (
-        echo "Extract failed."
-        file "${tmpfil}"
-        exit 1
-    )
+    curl -sL ${bin_url} -o "${tmpfil}" ||
+        printerr "Download failed"
+    tar xvf "${tmpfil}" -C "${target_folder}" ${strip_components} ||
+        printerr "Extract failed" "file ${tmpfil}"
 }
 
 install
