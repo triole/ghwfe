@@ -55,9 +55,11 @@ function install() {
     bin_url="${url_prefix}/${bin_url}"
     echo "Download      ${bin_url}"
     curl -sL ${bin_url} -o "${tmpfil}" &&
+        echo "Extract ${tmpfil}" &&
         tar xvf "${tmpfil}" -C "${target_folder}" ${strip_components} || (
         echo "Extract failed."
-        file ${tmpfil}
+        file "${tmpfil}"
+        exit 1
     )
 }
 
