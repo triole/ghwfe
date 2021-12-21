@@ -34,11 +34,7 @@ if [[ -z "${target_folder}" ]]; then
 fi
 target_folder="$(realpath "${target_folder}")"
 
-gobin="${GO_BIN_PATH}"
-if [[ ! -f "${gobin}" ]]; then
-    gobin="$(which go)"
-fi
-
+gobin="${GOROOT}/bin/go"
 goversion="$(${gobin} version | grep -Po "(?<=go)[0-9\.]+")"
 
 debug="false"

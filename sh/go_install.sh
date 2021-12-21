@@ -34,7 +34,7 @@ function get_latest_go_download_url() {
 rcmd "mkdir -p \"${target_folder}\""
 rcmd "curl -sL \"$(get_latest_go_download_url)\" -o \"${tempfile}\""
 rcmd "tar -xf \"${tempfile}\" --directory \"${target_folder}\" --strip-components 1"
-rcmd "ln -sf \"${target_folder}/bin/go\" \"${target_folder}/go\""
 
-rcmd "${target_folder}/go version"
+ls -la "${target_folder}"
+rcmd "${target_folder}/bin/go version"
 sleep 3
