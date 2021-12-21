@@ -6,13 +6,18 @@ if [[ -z "${source_folder}" ]]; then
     source_folder="${GITHUB_WORKSPACE}"
 fi
 
+go_root="${GOROOT}"
+if [[ -z "${go_root}" ]]; then
+    go_root="${GITHUB_WORKSPACE}"
+fi
+
 arr=($(find "$(realpath "${source_folder}")" -mindepth 1 -maxdepth 1 -type d))
 
 for el in "${arr[@]}"; do
     src="${el}"
     pkg="$(echo "${el}" | grep -Po "^.*(?=/.*/)" | grep -Po "[^/]+$")"
     subpkg="$(echo "${el}" | grep -Po "[^/]+$")"
-    trg="${GOROOT}/src/${pkg}/${subpkg}"
+    trg="${go_root}/src/${pkg}/${subpkg}"
 
     echo -e "Try to make symlink\n\t${src} -> ${trg}"
     if [[ ! -f "${trg}" ]] && [[ ! -d "${trg}" ]] && [[ ! -L "${trg}" ]]; then
