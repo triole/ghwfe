@@ -17,8 +17,10 @@ for el in "${arr[@]}"; do
     src="${el}"
     pkg="$(echo "${el}" | grep -Po "^.*(?=/.*/)" | grep -Po "[^/]+$")"
     subpkg="$(echo "${el}" | grep -Po "[^/]+$")"
-    trg="${go_root}/src/${pkg}/${subpkg}"
+    trgfol="${go_root}/src/${pkg}"
+    trg="${trgfol}/${subpkg}"
 
+    mkdir -p "${trgfol}"
     echo -e "Try to make symlink\n\t${src} -> ${trg}"
     if [[ ! -f "${trg}" ]] && [[ ! -d "${trg}" ]] && [[ ! -L "${trg}" ]]; then
         cmd="ln -s \"${src}\" \"${trg}\""
