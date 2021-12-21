@@ -6,7 +6,7 @@ if [[ -z "${source_folder}" ]]; then
     source_folder="${GITHUB_WORKSPACE}"
 fi
 
-arr=($(find "${source_folder}" -mindepth 1 -maxdepth 1 -type d))
+arr=($(find "$(realpath "${source_folder}")" -mindepth 1 -maxdepth 1 -type d))
 
 for el in "${arr[@]}"; do
     src="${el}"
