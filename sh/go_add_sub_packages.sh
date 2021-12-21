@@ -18,6 +18,7 @@ for el in "${arr[@]}"; do
     if [[ ! -f "${trg}" ]] && [[ ! -d "${trg}" ]] && [[ ! -L "${trg}" ]]; then
         cmd="ln -s \"${src}\" \"${trg}\""
         echo "${cmd}"
+        eval "${cmd}"
     else
         echo "Target exists. Can not make symlink at ${trg}"
         exit 1
