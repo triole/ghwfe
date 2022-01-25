@@ -54,7 +54,6 @@ function install() {
     bin_url="$(
         curl -Ls "${url_prefix}/${url}" | grep -Po "${grep_scheme}"
     )"
-    echo $bin_url
 
     if [[ -z "${bin_url}" ]]; then
         echo "Unable to retrieve binary url. Fetch was empty."
@@ -66,8 +65,7 @@ function install() {
             sed "s,https:/,https://,g" |
             grep -Po "^https?://[a-zA-Z0-9_\=\./\-]+"
     )"
-    echo $bin_url
-    exit
+
     echo "Download      ${bin_url}"
     curl -sL ${bin_url} -o "${tmpfil}" ||
         printerr "Download failed"
