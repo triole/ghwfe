@@ -63,7 +63,7 @@ function install() {
     bin_url="$(
         echo ${url_prefix}/${bin_url} | sed "s,//,/,g" |
             sed "s,https:/,https://,g" |
-            grep -Po "^https?://[a-zA-Z0-9_\=\./\-]+"
+            grep -Po "^https?://[a-zA-Z0-9_\-\=\./]+"
     )"
 
     echo "Download      ${bin_url}"
