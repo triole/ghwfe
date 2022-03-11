@@ -12,11 +12,13 @@ if [[ -z "${target_folder}" ]]; then
 fi
 target_folder="$(realpath "${target_folder}")"
 
+mkdir -p "${target_folder}"
+
 result="$(mktemp)"
 gobin="${GOROOT}/bin/go"
 
 function download_badge() {
-    echo "Save coverage badge to ${4}"
+    echo "Save badge: ${@}"
     curl -sS "https://img.shields.io/badge/${1}-${2}-${3}" >"${4}"
 }
 
@@ -39,12 +41,13 @@ if [[ "${MAKE_BADGES}" == "true" ]]; then
             if [[ "${tests_status}" == "pass" ]]; then
                 tests_colour="brightgreen"
             fi
+            coverage_int="$(echo ${coverage_value} | grep -Po "^[0-9]+")"
             coverage_colour="lightgrey"
-            if (($(echo "${coverage_value} <= 50" | bc -l))); then
+            if ((${coverage_int} < 50)); then
                 coverage_colour="red"
-            elif (($(echo "${coverage_value} <= 80" | bc -l))); then
+            elif ((${coverage_int} < 80)); then
                 coverage_colour="yellow"
-            elif (($(echo "${coverage_value} <= 90" | bc -l))); then
+            elif ((${coverage_int} < 90)); then
                 coverage_colour="green"
             else
                 coverage_colour="brightgreen"
