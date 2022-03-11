@@ -1,4 +1,5 @@
 #!/bin/bash
+
 source_folder="${SOURCE_FOLDER}"
 if [[ -z "${source_folder}" ]]; then
     source_folder="${GITHUB_WORKSPACE}"
@@ -12,6 +13,7 @@ fi
 target_folder="$(realpath "${target_folder}")"
 
 result="$(mktemp)"
+gobin="${GOROOT}/bin/go"
 
 function download_badge() {
     echo "Save coverage badge to ${4}"
@@ -19,7 +21,7 @@ function download_badge() {
 }
 
 echo -e "\nRun tests"
-cd "${source_folder}" && go test -trace go.trace -race -cover -bench=. |
+cd "${source_folder}" && ${gobin} test -trace go.trace -race -cover -bench=. |
     tee "${result}"
 
 if [[ "${MAKE_BADGES}" == "true" ]]; then
