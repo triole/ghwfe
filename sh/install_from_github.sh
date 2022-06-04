@@ -37,6 +37,10 @@ if [[ -z "${target_folder}" ]]; then
 fi
 
 # functions and main
+function ec() {
+    printf '\e[1;34m%-12s\e[m %s\n' "${1}" "${2}"
+}
+
 function printerr() {
     echo "${1}"
     if [[ -z "${2}" ]]; then
@@ -48,9 +52,8 @@ function printerr() {
 function install() {
     mkdir -p "${target_folder}"
 
-    tmpfil="/tmp/tmp_install.tar.gz"
-    echo "Fetch from    ${url_prefix}/${url}"
-    echo "Grep scheme   ${grep_scheme}"
+    ec "Fetch from" "${url_prefix}/${url}"
+    ec "Grep scheme" "${grep_scheme}"
     bin_url="$(
         curl -Ls "${url_prefix}/${url}" | grep -Po "${grep_scheme}"
     )"
@@ -66,11 +69,22 @@ function install() {
             grep -Po "^https?://[a-zA-Z0-9_\-\=\./]+"
     )"
 
-    echo "Download      ${bin_url}"
+    last_url_part=$(echo "${bin_url}" | grep -Po "[^/]+$")
+    tmpfil="/tmp/${last_url_part}"
+
+    ec "Download" "${bin_url}"
+    ec "To" "${tmpfil}"
     curl -sL ${bin_url} -o "${tmpfil}" ||
         printerr "Download failed"
-    tar xvf "${tmpfil}" -C "${target_folder}" ${strip_components} ||
-        printerr "Extract failed" "file ${tmpfil}"
+
+    if [[ -z $(file ${tmpfil} | grep "executable") ]]; then
+        ec "Extract to" "${target_folder}"
+        tar xvf "${tmpfil}" -C "${target_folder}" ${strip_components} ||
+            printerr "Extract failed" "file ${tmpfil}"
+    else
+        ec "Move bin to" "${target_folder}"
+        mv -f "${tmpfil}" "${target_folder}"
+    fi
 }
 
 install
