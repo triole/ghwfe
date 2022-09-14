@@ -60,7 +60,7 @@ function install() {
 
     hrefs=($(
         echo "${response}" |
-            grep -Po '(?<="browser_download_url":).*' | tr -d '"' | sort
+            grep -Po '(?<="browser_download_url":).*' | tr -d '"'
     ))
 
     if [[ "${#hrefs[@]}" == "0" ]]; then
