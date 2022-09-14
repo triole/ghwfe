@@ -5,8 +5,9 @@ url="${1}"
 grep_scheme="${2}"
 target_folder="${3}"
 strip_components="${4}"
-
-url_prefix="https://github.com"
+# https://api.github.com/repos/triole/lunr-indexer/releases
+url_prefix="https://api.github.com/repos"
+curl_cmd="curl -Ls"
 
 if [[ -z "${url}" ]]; then
     url="${URL}"
@@ -42,7 +43,7 @@ function ec() {
 }
 
 function printerr() {
-    echo "${1}"
+    echo -e "\033[0;91m${1}\033[0m"
     if [[ -z "${2}" ]]; then
         eval "${2}"
     fi
@@ -51,33 +52,45 @@ function printerr() {
 
 function install() {
     mkdir -p "${target_folder}"
-
-    ec "Fetch from" "${url_prefix}/${url}"
+    fetch_url="${url_prefix}/${url}/releases"
+    ec "Fetch from" "${fetch_url}"
     ec "Grep scheme" "${grep_scheme}"
-    bin_url="$(
-        curl -Ls "${url_prefix}/${url}" | grep -Po "${grep_scheme}"
-    )"
 
-    if [[ -z "${bin_url}" ]]; then
-        echo "Unable to retrieve binary url. Fetch was empty."
-        exit 1
+    response="$(${curl_cmd} "${fetch_url}")"
+
+    hrefs=($(
+        echo "${response}" |
+            grep -Po '(?<="browser_download_url":).*' | tr -d '"' | sort
+    ))
+
+    if [[ "${#hrefs[@]}" == "0" ]]; then
+        echo "${response}"
+        printerr "No urls found. Check response above."
     fi
 
-    bin_url="$(
-        echo ${url_prefix}/${bin_url} | sed "s,//,/,g" |
-            sed "s,https:/,https://,g" |
-            grep -Po "^https?://[a-zA-Z0-9_\-\=\./]+"
-    )"
+    for el in "${hrefs[@]}"; do
+        bin_url="$(echo "${el}" | grep "${grep_scheme}")"
+        if [[ -n "${bin_url}" ]]; then
+            break
+        fi
+    done
+
+    if [[ -z "${bin_url}" ]]; then
+        for el in "${hrefs[@]}"; do
+            echo "${el}"
+        done
+        echo -e "\n\033[0;91mNone of the urls above did match. Check grep scheme.\033[0m"
+        exit 1
+    fi
 
     last_url_part=$(echo "${bin_url}" | grep -Po "[^/]+$")
     tmpfil="/tmp/${last_url_part}"
 
     ec "Download" "${bin_url}"
     ec "To" "${tmpfil}"
-    curl -sL ${bin_url} -o "${tmpfil}" ||
-        printerr "Download failed"
+    ${curl_cmd} ${bin_url} -o "${tmpfil}" || printerr "Download failed"
 
-    if [[ -z $(file ${tmpfil} | grep "executable") ]]; then
+    if [[ -z "$(file "${tmpfil}" | grep "executable")" ]]; then
         ec "Extract to" "${target_folder}"
         tar xvf "${tmpfil}" -C "${target_folder}" ${strip_components} ||
             printerr "Extract failed" "file ${tmpfil}"
