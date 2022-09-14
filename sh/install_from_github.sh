@@ -52,7 +52,7 @@ function printerr() {
 
 function install() {
     mkdir -p "${target_folder}"
-    fetch_url="${url_prefix}/${url}/releases"
+    fetch_url="${url_prefix}/${url}/releases/latest"
     ec "Fetch from" "${fetch_url}"
     ec "Grep scheme" "${grep_scheme}"
 
