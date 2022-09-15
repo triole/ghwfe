@@ -42,6 +42,14 @@ function ec() {
     printf '\e[1;34m%-12s\e[m %s\n' "${1}" "${2}"
 }
 
+function is_exec() {
+    if [[ -n "$(od -N4 -c "${1}" | tr -d ' ' | grep -E "ELF$")" ]]; then
+        echo "true"
+    else
+        echo "false"
+    fi
+}
+
 function printerr() {
     echo -e "\033[0;91m${1}\033[0m"
     if [[ -z "${2}" ]]; then
@@ -90,7 +98,7 @@ function install() {
     ec "To" "${tmpfil}"
     ${curl_cmd} ${bin_url} -o "${tmpfil}" || printerr "Download failed"
 
-    if [[ -z "$(file "${tmpfil}" | grep "executable")" ]]; then
+    if [[ "$(is_exec "${tmpfil}")" == "false" ]]; then
         ec "Extract to" "${target_folder}"
         tar xvf "${tmpfil}" -C "${target_folder}" ${strip_components} ||
             printerr "Extract failed" "file ${tmpfil}"
