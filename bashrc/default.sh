@@ -1,7 +1,7 @@
 if [[ "$(whoami)" == "root" ]]; then
-    export PS1="\u@\h \033[0;93m\w\033[0m \\033[0;31m# \\033[0m "
+    export PS1="\u@\h \033[0;93m\w\033[0m \\033[1;31m# \\033[0m "
 else
-    export PS1="\u@\h \033[0;93m\w\033[0m \\033[0;92m\$\\033[0m "
+    export PS1="\u@\h \033[0;93m\w\033[0m \\033[1;92m\$\\033[0m "
 fi
 
 alias ..="cd .."
