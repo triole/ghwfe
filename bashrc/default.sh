@@ -1,3 +1,5 @@
+PS1='\u@\h:\w\$ '
+
 alias ..="cd .."
 alias cl="clear"
 alias env="env | sort"
