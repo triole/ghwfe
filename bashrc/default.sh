@@ -1,6 +1,10 @@
-export PS1="\u@\h \033[0;93m\w\033[0m \\033[1;92m\$\\033[0m "
+show_git_branch() {
+    git branch 2>/dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/'
+}
+
+export PS1="\u@\h \033[0;93m\w\033[0m \$(show_git_branch) \\033[1;92m\$\\033[0m "
 if [[ "$(whoami)" == "root" ]]; then
-    export PS1="\u@\h \033[0;93m\w\033[0m \\033[1;31m# \\033[0m "
+    export PS1="\u@\h \033[0;93m\w\033[0m \$(show_git_branch) \\033[1;31m# \\033[0m "
 fi
 
 alias ..="cd .."
@@ -13,7 +17,7 @@ alias mic="micro"
 alias p="python"
 alias pm="python manage.py"
 alias pkl="pkill -9"
-alias psa='function _psa(){ if [[ -n "${1}" ]]; then ps faux | sift "${1}" | sift -v "sift.*${1}"; else ps faux; fi };_psa'
+alias psa='function _psa(){ if [[ -n "${1}" ]]; then ps faux | grep "${1}" | grep -v "grep.*${1}"; else ps faux; fi };_psa'
 alias tailf="tail -F"
 alias tk="task"
 alias tlp="netstat -tulpen"
@@ -28,4 +32,8 @@ if [[ -n $(which ls-go) ]]; then
     alias l="ls-go -n"
     alias ll="ls-go -lnLS"
     alias la="ls-go -lanLS"
+fi
+
+if [[ -n "${HOME}" && -d "${HOME}" ]]; then
+    cd "${HOME}"
 fi
