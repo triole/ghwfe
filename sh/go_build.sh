@@ -11,6 +11,8 @@ architectures=(
     "freebsd_x86_64:GOOS=freebsd GOARCH=amd64"
     "darwin_arm64:GOOS=darwin GOARCH=arm64"
     "darwin_x86_64:GOOS=darwin GOARCH=amd64"
+    "windows_x86_64:GOOS=windows GOARCH=amd64"
+    "windows_x86_32:GOOS=windows GOARCH=386"
 )
 
 app_name="${APP_NAME}"
