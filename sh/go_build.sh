@@ -1,18 +1,21 @@
 #!/bin/bash
 
 architectures=(
+    "darwin_i386:GOOS=darwin GOARCH=386"
+    "darwin_arm64:GOOS=darwin GOARCH=arm64"
+    "darwin_x86_64:GOOS=darwin GOARCH=amd64"
+    "freebsd_arm64:GOOS=freebsd GOARCH=arm64"
+    "freebsd_i386:GOOS=freebsd GOARCH=386"
+    "freebsd_x86_64:GOOS=freebsd GOARCH=amd64"
+    "linux_armv5l:GOOS=linux GOARCH=arm GOARM=5"
     "linux_armv6l:GOOS=linux GOARCH=arm GOARM=6"
     "linux_armv7l:GOOS=linux GOARCH=arm GOARM=7"
     "linux_armv64:GOOS=linux GOARCH=arm64"
-    "linux_i686:GOOS=linux GOARCH=386"
+    "linux_i386:GOOS=linux GOARCH=386"
     "linux_x86_64:GOOS=linux GOARCH=amd64"
-    "freebsd_arm64:GOOS=freebsd GOARCH=arm64"
-    "freebsd_i686:GOOS=freebsd GOARCH=386"
-    "freebsd_x86_64:GOOS=freebsd GOARCH=amd64"
-    "darwin_arm64:GOOS=darwin GOARCH=arm64"
-    "darwin_x86_64:GOOS=darwin GOARCH=amd64"
+    "windows_i386:GOOS=windows GOARCH=386"
     "windows_x86_64:GOOS=windows GOARCH=amd64"
-    "windows_x86_32:GOOS=windows GOARCH=386"
+    "windows_arm64:GOOS=windows GOARCH=arm64"
 )
 
 app_name="${APP_NAME}"
