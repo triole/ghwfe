@@ -1,7 +1,6 @@
 #!/bin/bash
-
+IFS=$'\n'
 architectures=(
-    "darwin_i386:GOOS=darwin GOARCH=386"
     "darwin_arm64:GOOS=darwin GOARCH=arm64"
     "darwin_x86_64:GOOS=darwin GOARCH=amd64"
     "freebsd_arm64:GOOS=freebsd GOARCH=arm64"
@@ -69,6 +68,12 @@ function update_modules() {
 cd "${source_folder}"
 update_modules
 cd "${source_folder}"
+
+if [[ -n "${PRE_BUILD_COMMANDS}" ]]; then
+    for i in $(echo ${PRE_BUILD_COMMANDS[@]} | tr ';' '\n'); do
+        eval "${i}" || exit 1
+    done
+fi
 
 echo -e "\nSource folder \"$(pwd)\" layout:"
 ls
