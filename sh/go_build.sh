@@ -70,8 +70,9 @@ update_modules
 cd "${source_folder}"
 
 if [[ -n "${PRE_BUILD_COMMANDS}" ]]; then
+    echo -e "\nExecute pre build commands"
     for i in $(echo ${PRE_BUILD_COMMANDS[@]} | tr ';' '\n'); do
-        eval "${i}" || exit 1
+        rcmd "${i}" || exit 1
     done
 fi
 
