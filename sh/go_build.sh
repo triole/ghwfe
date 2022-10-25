@@ -69,16 +69,16 @@ cd "${source_folder}"
 update_modules
 cd "${source_folder}"
 
-if [[ -n "${PRE_BUILD_COMMANDS}" ]]; then
-    echo -e "\nExecute pre build commands"
-    for i in $(echo ${PRE_BUILD_COMMANDS[@]} | tr ';' '\n'); do
-        rcmd "${i}" || exit 1
-    done
-fi
-
 echo -e "\nSource folder \"$(pwd)\" layout:"
 ls
 echo ""
+
+if [[ -n "${PRE_BUILD_COMMANDS}" ]]; then
+    echo -e "\nGot pre build commands. Execute..."
+    for cmd in $(echo ${PRE_BUILD_COMMANDS[@]} | tr ';' '\n'); do
+        rcmd "${cmd}"
+    done
+fi
 
 for arch in "${architectures[@]}"; do
     arch_name="$(echo "${arch}" | grep -Po ".*(?=:)")"
