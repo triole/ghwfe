@@ -83,7 +83,8 @@ fi
 for arch in "${architectures[@]}"; do
     arch_name="$(echo "${arch}" | grep -Po ".*(?=:)")"
     arch="$(echo "${arch}" | grep -Po "[^:]+$")"
-    rcmd "CGO_ENABLED=0 ${arch} ${gobin} build -o ${target_folder}/${arch_name}/${app_name} \
+    rcmd "CGO_ENABLED=0 ${arch} ${gobin} build ${BUILD_ARGS} \
+        -o ${target_folder}/${arch_name}/${app_name} \
         -ldflags \
         \"-s -w -X 'main.BUILDTAGS={
             _subversion: ${ld_git_commit_no}, author: ${ld_author},
