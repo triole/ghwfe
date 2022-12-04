@@ -30,8 +30,8 @@ alias tailf="tail -F"
 alias tk="task"
 alias tlp="$(autosudo)netstat -tulpen"
 
-if [[ -n "$(which micro)" ]]; then alias mic="micro"; fi
-if [[ -n "$(which miss)" ]]; then alias less="miss"; fi
+which micro >/dev/null 2>&1 || alias mic="micro"
+which miss >/dev/null 2>&1 || alias less="miss"
 
 alias dml="$(autosudo) dmesg | less"
 alias dmg=$(autosudo)' dmesg | grep -i "${@}"'
