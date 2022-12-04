@@ -11,9 +11,9 @@ function update_bashrc() {
         https://raw.githubusercontent.com/triole/ghwfe/master/bashrc/default.sh
 }
 
-export PS1="\u@\h \033[0;93m\w\033[0m \$(show_git_branch) \\033[1;92m\$\\033[0m "
+export PS1="\u@$(hostname) \033[0;93m\w\033[0m \$(show_git_branch) \\033[1;92m\$\\033[0m "
 if [[ "$(whoami)" == "root" ]]; then
-    export PS1="\u@\h \033[0;93m\w\033[0m \$(show_git_branch) \\033[1;31m# \\033[0m "
+    export PS1="\u@$(hostname) \033[0;93m\w\033[0m \$(show_git_branch) \\033[1;31m# \\033[0m "
 fi
 
 alias ..="cd .."
