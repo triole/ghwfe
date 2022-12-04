@@ -22,7 +22,6 @@ alias gitp="git pull"
 alias gits="git status"
 alias grep="grep --color"
 alias lsblk="lsblk -o name,maj:min,ro,rm,type,size,mountpoint,label,uuid,pttype,parttypename,type,vendor,model,serial"
-alias mic="micro"
 alias p="python"
 alias pm="python manage.py"
 alias pkl="pkill -9"
@@ -31,9 +30,9 @@ alias tailf="tail -F"
 alias tk="task"
 alias tlp="$(autosudo)netstat -tulpen"
 
-if [[ -n "$(which miss)" ]]; then
-    alias less="miss"
-fi
+if [[ -n "$(which micro)" ]]; then alias mic="micro"; fi
+if [[ -n "$(which miss)" ]]; then alias less="miss"; fi
+
 alias dml="$(autosudo) dmesg | less"
 alias dmg=$(autosudo)' dmesg | grep -i "${@}"'
 
