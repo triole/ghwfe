@@ -50,3 +50,8 @@ fi
 if [[ -n "${HOME}" && -d "${HOME}" ]]; then
     cd "${HOME}"
 fi
+
+function update_bashrc() {
+    curl --output ${HOME}/.bashrc \
+        https://raw.githubusercontent.com/triole/ghwfe/master/bashrc/default.sh
+}
