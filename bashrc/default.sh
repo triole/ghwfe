@@ -1,9 +1,14 @@
+function autosudo() {
+    if [[ "$(id -u)" != "0" && -n "$(which sudo)" ]]; then echo "sudo "; fi
+}
+
 function show_git_branch() {
     git branch 2>/dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/'
 }
 
-function autosudo() {
-    if [[ "$(id -u)" != "0" && -n "$(which sudo)" ]]; then echo "sudo "; fi
+function update_bashrc() {
+    curl --output ${HOME}/.bashrc \
+        https://raw.githubusercontent.com/triole/ghwfe/master/bashrc/default.sh
 }
 
 export PS1="\u@\h \033[0;93m\w\033[0m \$(show_git_branch) \\033[1;92m\$\\033[0m "
@@ -30,28 +35,23 @@ alias tailf="tail -F"
 alias tk="task"
 alias tlp="$(autosudo)netstat -tulpen"
 
-which micro >/dev/null 2>&1 && alias mic="micro"
-which miss >/dev/null 2>&1 && alias less="miss"
-
 alias dml="$(autosudo) dmesg | less"
 alias dmg=$(autosudo)' dmesg | grep -i "${@}"'
+
+which micro >/dev/null 2>&1 && alias mic="micro"
+which miss >/dev/null 2>&1 && alias less="miss"
 
 export LS_COLORS=${LS_COLORS}:"di=1;34":"*.txt=1;36":"*.md=0;93"
 alias l="ls --color=auto -CF"
 alias ll="ls --color=auto -lF"
 alias la="ls --color=auto -AlF"
 
-if [[ -n $(which ls-go) ]]; then
+which ls-go >/dev/null 2>&1 && {
     alias l="ls-go -n"
     alias ll="ls-go -lnLS"
     alias la="ls-go -lanLS"
-fi
+}
 
 if [[ -n "${HOME}" && -d "${HOME}" ]]; then
     cd "${HOME}"
 fi
-
-function update_bashrc() {
-    curl --output ${HOME}/.bashrc \
-        https://raw.githubusercontent.com/triole/ghwfe/master/bashrc/default.sh
-}
