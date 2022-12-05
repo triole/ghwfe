@@ -1,3 +1,8 @@
+cgrn="\033[1;92m"
+cred="\033[1;91m"
+cyel="\033[0;93m"
+cnon="\033[0m"
+
 function autosudo() {
     if [[ "$(id -u)" != "0" && -n "$(which sudo)" ]]; then echo "sudo "; fi
 }
@@ -11,10 +16,19 @@ function update_bashrc() {
         https://raw.githubusercontent.com/triole/ghwfe/master/bashrc/default.sh
 }
 
-export PS1="\u@$(hostname) \033[0;93m\w\033[0m \$(show_git_branch) \\033[1;92m\$\\033[0m "
-if [[ "$(whoami)" == "root" ]]; then
-    export PS1="\u@$(hostname) \033[0;93m\w\033[0m \$(show_git_branch) \\033[1;31m# \\033[0m "
+function get_exit_status() {
+    es=${?}
+    if [ ${es} -ne 0 ]; then
+        echo -e "${cred}${es}${cnon} "
+    fi
+}
+
+ps1_prefix="\u@$(hostname) ${cyel}\w${cnon}"
+ps1_suffix="${cgrn}\$ ${cnon}"
+if [[ $(id -u) -eq 0 ]]; then
+    ps1_suffix="${cred}# ${cnon} "
 fi
+export PS1="\$(get_exit_status)${ps1_prefix} \$(show_git_branch) ${ps1_suffix}"
 
 alias ..="cd .."
 alias cl="clear"
