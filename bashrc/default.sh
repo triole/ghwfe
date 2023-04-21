@@ -60,6 +60,10 @@ alias l="ls --color=auto -CF"
 alias ll="ls --color=auto -lF"
 alias la="ls --color=auto -AlF"
 
+which mic >/dev/null 2>&1 && {
+    export EDITOR="mic"
+}
+
 which ls-go >/dev/null 2>&1 && {
     alias l="ls-go -n"
     alias ll="ls-go -lnLS"
