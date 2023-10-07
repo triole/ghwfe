@@ -1,3 +1,4 @@
+---
 name: build
 
 on:
@@ -6,41 +7,37 @@ on:
       - '*'
 
 jobs:
-    goreleaser:
-        runs-on: ubuntu-latest
-        steps:
-            -
-                name: Checkout
-                uses: actions/checkout@v2
-                with:
-                    fetch-depth: 0
-            -
-                name: Make github config
-                run: sh/make_github_config.sh
-            -
-                name: Install Go
-                env:
-                    TARGET_FOLDER: /home/runner/.local/bin
-                run: sh/install_go.sh
-            -
-                name: Go build
-                env:
-                    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                    GO_BIN_PATH: /home/runner/.local/bin/go
-                    VERSION_COMMAND: git -C ${GITHUB_WORKSPACE} rev-list "origin/master" --count --
-                    # source folder is the default $GITHUB_WORKSPACE
-                    TARGET_FOLDER: build
-                run: sh/go_build.sh
-            -
-                name: Gzip assets
-                env:
-                    VERSION_COMMAND: git -C ${GITHUB_WORKSPACE} rev-list "origin/master" --count --
-                    BASE_DIR: build
-                run: sh/compress_builds.sh | bash
-            -
-                name: Upload release binaries
-                uses: alexellis/upload-assets@0.3.0
-                env:
-                    GITHUB_TOKEN: ${{ github.token }}
-                with:
-                    asset_paths: '["/tmp/assets/*"]'
+  goreleaser:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Make github config
+        run: sh/make_github_config.sh
+      - name: Install Go
+        env:
+          TARGET_FOLDER: /home/runner/.local/bin
+        run: sh/install_go.sh
+      - name: Go build
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GO_BIN_PATH: /home/runner/.local/bin/go
+          VERSION_COMMAND: git -C ${GITHUB_WORKSPACE} rev-list
+            "origin/master" --count --
+          # source folder is the default $GITHUB_WORKSPACE
+          TARGET_FOLDER: build
+        run: sh/go_build.sh
+      - name: Gzip assets
+        env:
+          VERSION_COMMAND: git -C ${GITHUB_WORKSPACE} rev-list
+            "origin/master" --count --
+          BASE_DIR: build
+        run: sh/compress_builds.sh | bash
+      - name: Upload release binaries
+        uses: alexellis/upload-assets@0.3.0
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          asset_paths: '["/tmp/assets/*"]'
