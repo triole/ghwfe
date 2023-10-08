@@ -3,30 +3,38 @@ cred="\033[1;91m"
 cyel="\033[0;93m"
 cnon="\033[0m"
 
-function autosudo() {
-    if [[ "$(id -u)" != "0" && -n "$(which sudo)" ]]; then echo "sudo "; fi
+autosudo() {
+  if [[ "$(id -u)" != "0" && -n "$(which sudo)" ]]; then echo "sudo "; fi
 }
 
-function show_git_branch() {
-    git branch 2>/dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/'
+show_git_branch() {
+  git branch 2>/dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/'
 }
 
-function update_bashrc() {
-    curl --output ${HOME}/.bashrc \
-        https://raw.githubusercontent.com/triole/ghwfe/master/bashrc/default.sh
+update_bashrc() {
+  curl --output ${HOME}/.bashrc \
+    https://raw.githubusercontent.com/triole/ghwfe/master/bashrc/default.sh
 }
 
-function get_exit_status() {
-    es=${?}
-    if [ ${es} -ne 0 ]; then
-        echo -e "${cred}${es}${cnon} "
-    fi
+tailf() {
+  if [[ -d "${1}" ]]; then
+    tail -F $(find ${1} -type f -mindepth 1 -maxdepth 1)
+  else
+    tail -F "${1}"
+  fi
+}
+
+get_exit_status() {
+  es=${?}
+  if [ ${es} -ne 0 ]; then
+    echo -e "${cred}${es}${cnon} "
+  fi
 }
 
 ps1_prefix="\u@$(hostname) ${cyel}\w${cnon}"
 ps1_suffix="${cgrn}\$ ${cnon}"
 if [[ $(id -u) -eq 0 ]]; then
-    ps1_suffix="${cred}# ${cnon} "
+  ps1_suffix="${cred}# ${cnon} "
 fi
 export PS1="\$(get_exit_status)${ps1_prefix} \$(show_git_branch) ${ps1_suffix}"
 
@@ -44,8 +52,7 @@ alias lsblk="lsblk -o name,maj:min,ro,rm,type,size,mountpoint,label,uuid,pttype,
 alias p="python"
 alias pm="python manage.py"
 alias pkl="pkill -9"
-alias psa='function _psa(){ if [[ -n "${1}" ]]; then ps faux | grep "${1}" | grep -v "grep.*${1}"; else ps faux; fi };_psa'
-alias tailf="tail -F"
+alias psa='_psa(){ if [[ -n "${1}" ]]; then ps faux | grep "${1}" | grep -v "grep.*${1}"; else ps faux; fi };_psa'
 alias tk="task"
 alias tlp="$(autosudo)netstat -tulpen"
 
@@ -61,15 +68,15 @@ alias ll="ls --color=auto -lF"
 alias la="ls --color=auto -AlF"
 
 which mic >/dev/null 2>&1 && {
-    export EDITOR="mic"
+  export EDITOR="mic"
 }
 
 which ls-go >/dev/null 2>&1 && {
-    alias l="ls-go -n"
-    alias ll="ls-go -lnLS"
-    alias la="ls-go -lanLS"
+  alias l="ls-go -n"
+  alias ll="ls-go -lnLS"
+  alias la="ls-go -lanLS"
 }
 
 if [[ -n "${HOME}" && -d "${HOME}" ]]; then
-    cd "${HOME}"
+  cd "${HOME}"
 fi
