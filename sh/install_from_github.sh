@@ -35,11 +35,11 @@ if [[ -z "${target_folder}" ]]; then
   exit 1
 fi
 
-function ec() {
+ec() {
   printf '\e[1;34m%-12s\e[m %s\n' "${1}" "${2}"
 }
 
-function is_exec() {
+is_exec() {
   if [[ -n "$(od -N4 -c "${1}" | tr -d ' ' | grep -E "ELF$")" ]]; then
     echo "true"
   else
@@ -47,7 +47,7 @@ function is_exec() {
   fi
 }
 
-function printerr() {
+printerr() {
   echo -e "\033[0;91m${1}\033[0m"
   if [[ -z "${2}" ]]; then
     eval "${2}"
@@ -55,7 +55,7 @@ function printerr() {
   exit 1
 }
 
-function install() {
+install() {
   mkdir -p "${target_folder}"
   fetch_url="${url_prefix}/${url}/releases"
   ec "Fetch from" "${fetch_url}"

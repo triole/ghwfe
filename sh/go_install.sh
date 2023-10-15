@@ -2,33 +2,33 @@
 
 target_folder="${1}"
 if [[ -z "${target_folder}" ]]; then
-    target_folder="${TARGET_FOLDER}"
+  target_folder="${TARGET_FOLDER}"
 fi
 
 tempfile="/tmp/golang.tar.gz"
 
 debug="false"
 for val in "$@"; do
-    if [[ "${val}" =~ ^-+(d|debug)$ ]]; then
-        debug="true"
-    fi
+  if [[ "${val}" =~ ^-+(d|debug)$ ]]; then
+    debug="true"
+  fi
 done
 
-function rcmd() {
-    echo "${1}"
-    if [[ "${debug}" == "false" ]]; then
-        eval "${1}"
-    fi
+rcmd() {
+  echo "${1}"
+  if [[ "${debug}" == "false" ]]; then
+    eval "${1}"
+  fi
 }
 
-function get_latest_go_download_url() {
-    url="https://golang.org/dl"
-    r=$(
-        curl -sL ${url} |
-            grep -Po '(?<=href=").*linux-amd64.tar.gz(?=")' |
-            head -n 1
-    )
-    echo "${url:0:-3}${r}"
+get_latest_go_download_url() {
+  url="https://golang.org/dl"
+  r=$(
+    curl -sL ${url} |
+      grep -Po '(?<=href=").*linux-amd64.tar.gz(?=")' |
+      head -n 1
+  )
+  echo "${url:0:-3}${r}"
 }
 
 rcmd "mkdir -p \"${target_folder}\""
