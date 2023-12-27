@@ -17,47 +17,6 @@ mkdir -p "${target_folder}"
 result="$(mktemp)"
 gobin="${GOROOT}/bin/go"
 
-download_badge() {
-  echo "Save badge: ${@}"
-  curl -sS "https://img.shields.io/badge/${1}-${2}-${3}" >"${4}"
-}
-
 echo -e "\nRun tests"
-cd "${source_folder}" && ${gobin} test -trace go.trace -race -cover -bench=. |
-  tee "${result}"
-
-if [[ "${MAKE_BADGES}" == "true" ]]; then
-  echo -e "\nMake badges"
-  if [[ -f "${result}" ]]; then
-    coverage_value=$(cat "${result}" | grep -Po "[0-9\.]+(?=%)" | head -n 1)
-    if [[ -n "${coverage_value}" ]]; then
-      tests_status=$(
-        cat "${result}" | grep -Po "PASS" | head -n 1 | tr '[:upper:]' '[:lower:]'
-      )
-      if [[ -z "${tests_status}" ]]; then
-        tests_status="fail"
-      fi
-      tests_colour="red"
-      if [[ "${tests_status}" == "pass" ]]; then
-        tests_colour="brightgreen"
-      fi
-      coverage_int="$(echo ${coverage_value} | grep -Po "^[0-9]+")"
-      coverage_colour="lightgrey"
-      if ((${coverage_int} < 50)); then
-        coverage_colour="red"
-      elif ((${coverage_int} < 80)); then
-        coverage_colour="yellow"
-      elif ((${coverage_int} < 90)); then
-        coverage_colour="green"
-      else
-        coverage_colour="brightgreen"
-      fi
-    fi
-  fi
-
-  download_badge "coverage" "${coverage_value}%25" "${coverage_colour}" \
-    "${target_folder}/_badge_coverage.svg"
-
-  download_badge "tests" "${tests_status}" "${tests_colour}" \
-    "${target_folder}/_badge_tests.svg"
-fi
+cd "${source_folder}" &&
+  ${gobin} test -trace go.trace -race -cover -bench=.
