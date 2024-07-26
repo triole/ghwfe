@@ -81,7 +81,7 @@ if [[ -n "${PRE_BUILD_COMMANDS}" ]]; then
 fi
 
 for arch in "${architectures[@]}"; do
-  arch_name="$(echo "${arch}" | grep -Po ".*(?=:)" | sed -E 's|armv([0-9]+)[a-z]+|arm\1|g')"
+  arch_name="$(echo "${arch}" | grep -Po ".*(?=:)" | sed -E 's|armv([0-9]+)[a-z]*|arm\1|g')"
   arch="$(echo "${arch}" | grep -Po "[^:]+$")"
   rcmd "CGO_ENABLED=0 ${arch} ${gobin} build ${BUILD_ARGS} \
         -o ${target_folder}/${arch_name}/${app_name} \
