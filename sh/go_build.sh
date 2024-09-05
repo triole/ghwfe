@@ -23,9 +23,9 @@ if [[ -z "${app_name}" ]]; then
 fi
 ld_author=$(grep -Po "(?<=name\s=\s).*" ~/.gitconfig)
 
-ld_git_commit_no="$(git rev-list --count --all "origin/master")"
+ld_git_commit_no="$(git rev-list --count --all "master")"
 if [[ -z "${ld_git_commit}" ]]; then
-  ld_git_commit_no="$(git rev-list --count --all "github/master")"
+  ld_git_commit_no="$(git rev-list --count --all "main")"
 fi
 
 ld_git_commit_hash=$(git rev-parse HEAD)
