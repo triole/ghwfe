@@ -24,8 +24,12 @@ fi
 ld_author=$(grep -Po "(?<=name\s=\s).*" ~/.gitconfig)
 
 ld_git_commit_no="$(git rev-list --count --all "master")"
-if [[ -z "${ld_git_commit}" ]]; then
+if [[ -z "${ld_git_commit_no}" ]]; then
   ld_git_commit_no="$(git rev-list --count --all "main")"
+fi
+if [[ -z "${ld_git_commit_no}" ]]; then
+  echo "[error] can not fetch git commit no to use as sub version"
+  exit 1
 fi
 
 ld_git_commit_hash=$(git rev-parse HEAD)
