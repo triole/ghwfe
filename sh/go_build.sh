@@ -33,7 +33,7 @@ fi
 ld_author=$(grep -Po "(?<=name\s=\s).*" ~/.gitconfig)
 
 for rev in "${revlist[@]}"; do
-  ld_git_commit_no="$(git rev-list --count --all "${rev}")"
+  ld_git_commit_no="$(git rev-list --count --all "${rev}" 2>/dev/null)"
   if [[ -n "${ld_git_commit_no}" ]]; then
     break
   fi
