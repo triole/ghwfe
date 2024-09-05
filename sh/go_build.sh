@@ -22,7 +22,12 @@ if [[ -z "${app_name}" ]]; then
   app_name=$(pwd | grep -Po "[^/]+$")
 fi
 ld_author=$(grep -Po "(?<=name\s=\s).*" ~/.gitconfig)
-ld_git_commit_no=$(git rev-list "origin/master" --count --all)
+
+ld_git_commit_no="$(git rev-list --count --all "origin/master")"
+if [[ -z "${ld_git_commit}" ]]; then
+  ld_git_commit_no="$(git rev-list --count --all "github/master")"
+fi
+
 ld_git_commit_hash=$(git rev-parse HEAD)
 ld_date=$(LANG=en_us_88591 date)
 
