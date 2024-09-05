@@ -17,16 +17,27 @@ architectures=(
   "windows_arm64:GOOS=windows GOARCH=arm64"
 )
 
+revlist=(
+  "master"
+  "main"
+  "origin/master"
+  "origin/main"
+  "github/master"
+  "github/main"
+)
+
 app_name="${APP_NAME}"
 if [[ -z "${app_name}" ]]; then
   app_name=$(pwd | grep -Po "[^/]+$")
 fi
 ld_author=$(grep -Po "(?<=name\s=\s).*" ~/.gitconfig)
 
-ld_git_commit_no="$(git rev-list --count --all "master")"
-if [[ -z "${ld_git_commit_no}" ]]; then
-  ld_git_commit_no="$(git rev-list --count --all "main")"
-fi
+for rev in "${revlist[@]}"; do
+  ld_git_commit_no="$(git rev-list --count --all "${rev}")"
+  if [[ -n "${ld_git_commit_no}" ]]; then
+    break
+  fi
+done
 if [[ -z "${ld_git_commit_no}" ]]; then
   echo "[error] can not fetch git commit no to use as sub version"
   exit 1
