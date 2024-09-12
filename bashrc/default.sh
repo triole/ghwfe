@@ -39,7 +39,11 @@ fi
 export PS1="\$(get_exit_status)${ps1_prefix} \$(show_git_branch) ${ps1_suffix}"
 
 alias ..="cd .."
+alias addgrp="usermod -a -G"
+alias addusr="useradd"
 alias cl="clear"
+alias dml="$(autosudo) dmesg | less"
+alias dmg=$(autosudo)' dmesg | grep -i "${@}"'
 alias env="env | sort"
 alias gita="git add"
 alias gitd="git diff"
@@ -55,9 +59,6 @@ alias pkl="pkill -9"
 alias psa='_psa(){ if [[ -n "${1}" ]]; then ps faux | grep "${1}" | grep -v "grep.*${1}"; else ps faux; fi };_psa'
 alias tk="task"
 alias tlp="$(autosudo)netstat -tulpen"
-
-alias dml="$(autosudo) dmesg | less"
-alias dmg=$(autosudo)' dmesg | grep -i "${@}"'
 
 which micro >/dev/null 2>&1 && alias mic="micro"
 which miss >/dev/null 2>&1 && alias less="miss"
