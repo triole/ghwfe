@@ -64,9 +64,9 @@ which micro >/dev/null 2>&1 && alias mic="micro"
 which miss >/dev/null 2>&1 && alias less="miss"
 
 export LS_COLORS=${LS_COLORS}:"di=1;34":"*.txt=1;36":"*.md=0;93"
-alias l="ls --color=auto -CF"
-alias ll="ls --color=auto -lF"
-alias la="ls --color=auto -AlF"
+alias l="ls --color=auto -CFh"
+alias ll="ls --color=auto -lFh"
+alias la="ls --color=auto -AlFh"
 
 which mic >/dev/null 2>&1 && {
   export EDITOR="mic"
