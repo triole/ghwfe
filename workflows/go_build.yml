@@ -1,3 +1,4 @@
+---
 name: build
 
 on:
@@ -6,39 +7,37 @@ on:
       - '*'
 
 jobs:
-    goreleaser:
-        runs-on: ubuntu-latest
-        steps:
-            -
-                name: Checkout
-                uses: actions/checkout@v2
-                with:
-                    fetch-depth: 0
-            -
-                name: Make github config
-                run: curl https://raw.githubusercontent.com/triole/ghsh/sh/master/make_github_config.sh | bash
-            -
-                name: Install Go
-                env:
-                    TARGET_FOLDER: /home/runner/.local/bin
-                run: curl https://raw.githubusercontent.com/triole/ghsh/sh/test/install_go.sh | bash
-            -
-                name: Go build
-                env:
-                    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                    GO_BIN_PATH: /home/runner/.local/bin/go
-                    SOURCE_FOLDER: /home/runner
-                    TARGET_FOLDER: build
-                run: curl https://raw.githubusercontent.com/triole/ghsh/sh/test/go_build.sh | bash
-            -
-                name: Gzip assets
-                env:
-                    BASE_DIR: build
-                run: curl https://raw.githubusercontent.com/triole/ghsh/sh/master/compress_builds.sh | bash
-            -
-                name: Upload release binaries
-                uses: alexellis/upload-assets@0.3.0
-                env:
-                    GITHUB_TOKEN: ${{ github.token }}
-                with:
-                    asset_paths: '["/tmp/assets/*"]'
+  goreleaser:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Make github config
+        run: curl https://raw.githubusercontent.com/triole/ghsh/sh/master/make_github_config.sh
+          | bash
+      - name: Install Go
+        env:
+          TARGET_FOLDER: /home/runner/.local/bin
+        run: curl https://raw.githubusercontent.com/triole/ghsh/sh/test/install_go.sh
+          | bash
+      - name: Go build
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GO_BIN_PATH: /home/runner/.local/bin/go
+          SOURCE_FOLDER: /home/runner
+          TARGET_FOLDER: build
+        run: curl https://raw.githubusercontent.com/triole/ghsh/sh/test/go_build.sh
+          | bash
+      - name: Gzip assets
+        env:
+          BASE_DIR: build
+        run: curl https://raw.githubusercontent.com/triole/ghsh/sh/master/compress_builds.sh
+          | bash
+      - name: Upload release binaries
+        uses: alexellis/upload-assets@0.3.0
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          asset_paths: '["/tmp/assets/*"]'
