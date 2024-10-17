@@ -17,8 +17,16 @@ appname="$(echo ${source_folder} | grep -Po ".*(?=\/)" | grep -Po "[^/]+$")"
 version_no=$(eval "${VERSION_COMMAND}")
 if [[ -z "${version_no}" ]]; then
   bin="$(find "${source_folder}" -type f -executable | grep "linux_$(arch)")"
-  cmd="${bin} -V | grep -v \"go version\" | grep -Poi \"version.*\" | grep -Po \"[^\s]+$\""
-  echo "Get version cmd: ${cmd}"
+  version_no="$(
+    eval ${bin} -V | grep -v \"go version\" | grep -Poi \"version.*\" |
+      grep -Po \"[^\s]+$\" || exit 1
+  )"
+fi
+if [[ -z "${version_no}" ]]; then
+  version_no="$(
+    eval ${bin} version | grep -v \"go version\" | grep -Poi \"version.*\" |
+      grep -Po \"[^\s]+$\" || exit 1
+  )"
   version_no="$(eval "${cmd}" || exit 1)"
 fi
 
