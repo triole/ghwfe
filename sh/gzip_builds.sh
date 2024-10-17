@@ -50,7 +50,7 @@ fi
 
 echo "base dir: ${source_folder}"
 echo "version : ${version_no}"
-exit
+
 rcmd() {
   echo -e "\n\033[0;93m${1}\033[0m"
   eval ${1}
