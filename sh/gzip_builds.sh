@@ -11,28 +11,46 @@ if [[ -z "${target_folder}" ]]; then
   target_folder="/tmp/assets"
 fi
 target_folder="$(realpath "${target_folder}")"
-
 appname="$(echo ${source_folder} | grep -Po ".*(?=\/)" | grep -Po "[^/]+$")"
+version_command_args=("-V" "--version" "version")
 
-version_no=$(eval "${VERSION_COMMAND}")
-if [[ -z "${version_no}" ]]; then
-  bin="$(find "${source_folder}" -type f -executable | grep "linux_$(arch)")"
-  version_no="$(
-    eval ${bin} -V | grep -v \"go version\" | grep -Poi \"version.*\" |
-      grep -Po \"[^\s]+$\" || exit 1
+printerr() {
+  echo -e "$(date "+%Y-%m-%d %H:%M:%S") \033[0;31m[error]\033[0m ${1}"
+}
+
+find_binary() {
+  bin="$(
+    find "${source_folder}" -type f -executable |
+      grep "linux_$(arch)" | sort | head -n 1
   )"
-fi
+  if [[ -z "${bin}" ]]; then
+    printerr "unable to detect binary"
+    exit 1
+  fi
+  echo "${bin}"
+}
+
+for el in "${version_command_args[@]}"; do
+  if [[ -z "${version_no}" ]]; then
+    bin="$(find_binary)"
+    version_no="$(
+      eval ${bin} ${el} 2>/dev/null | grep -v "go version" |
+        grep -Poi "version.*" | grep -Po "[0-9\.]+"
+    )"
+    if [[ -n "${version_no}" ]]; then
+      break
+    fi
+  fi
+done
+
 if [[ -z "${version_no}" ]]; then
-  version_no="$(
-    eval ${bin} version | grep -v \"go version\" | grep -Poi \"version.*\" |
-      grep -Po \"[^\s]+$\" || exit 1
-  )"
-  version_no="$(eval "${cmd}" || exit 1)"
+  echo "[error] can not get version number"
+  exit 1
 fi
 
-echo "Base dir: ${source_folder}"
-echo "Version : ${version_no}"
-
+echo "base dir: ${source_folder}"
+echo "version : ${version_no}"
+exit
 rcmd() {
   echo -e "\n\033[0;93m${1}\033[0m"
   eval ${1}
