@@ -18,5 +18,4 @@ result="$(mktemp)"
 gobin="${GOROOT}/bin/go"
 
 echo -e "\nRun tests"
-cd "${source_folder}" &&
-  ${gobin} go test ./... -v -coverpkg=./... -race -bench=.
+${gobin} test ./... -v -coverpkg=./... -race -bench=.
