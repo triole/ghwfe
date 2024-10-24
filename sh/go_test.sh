@@ -19,4 +19,4 @@ gobin="${GOROOT}/bin/go"
 
 echo -e "\nRun tests"
 cd "${source_folder}" &&
-  ${gobin} test -trace go.trace -race -cover -bench=.
+  ${gobin} go test ./... -v -coverpkg=./... -race -bench=.
