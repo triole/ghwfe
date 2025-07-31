@@ -43,7 +43,11 @@ if [[ -z "${ld_git_commit_no}" ]]; then
   exit 1
 fi
 
-ld_git_commit_hash=$(git rev-parse HEAD)
+ld_git_commit_hash="$(git rev-parse HEAD)"
+ld_repo_url="$(
+  git remote -v | grep -Po "(?<=origin).+(?=\(fetch\))" | xargs \
+  | sed -E "s|git@([0-9A-Za-z\.]+):|https://\1/|g"
+)"
 ld_date=$(LANG=en_us_88591 date)
 
 source_folder="${SOURCE_FOLDER}"
@@ -109,7 +113,7 @@ for arch in "${architectures[@]}"; do
         \"-s -w -X 'main.BUILDTAGS={
             _subversion: ${ld_git_commit_no}, author: ${ld_author},
             build date: ${ld_date}, git hash: ${ld_git_commit_hash},
-            go version: ${goversion}
+            repo url: ${ld_repo_url}, go version: ${goversion}
         }'\""
 done
 
