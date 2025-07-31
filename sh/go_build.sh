@@ -45,8 +45,8 @@ fi
 
 ld_git_commit_hash="$(git rev-parse HEAD)"
 ld_repo_url="$(
-  git remote -v | grep -Po "(?<=origin).+(?=\(fetch\))" | xargs \
-  | sed -E "s|git@([0-9A-Za-z\.]+):|https://\1/|g"
+  git remote -v | grep -Po "[^\s]+(?= \(fetch\))" | xargs |
+    sed "s|:|/|g" | sed -E "s|^[^@]+@|https://|g"
 )"
 ld_date=$(LANG=en_us_88591 date)
 
