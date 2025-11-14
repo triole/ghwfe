@@ -29,6 +29,6 @@ target_folder="${TARGET_FOLDER}"
 [[ -z "${target_folder}" ]] && target_folder="/tmp/assets"
 target_folder="$(realpath "${target_folder}")"
 
-echo mkdir -p "${target_folder}"
+mkdir -p "${target_folder}"
 cd "${source_folder}" &&
   _rcmd go test -v -race -cover -bench=. ./...
