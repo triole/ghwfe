@@ -1,7 +1,5 @@
 #!/bin/bash
 
-[[ -z "${GOROOT}" ]] && export GOROOT="/usr/local/bin"
-
 source_folder="${SOURCE_FOLDER}"
 [[ -z "${source_folder}" ]] && source_folder="${GITHUB_WORKSPACE}"
 
@@ -17,5 +15,5 @@ mkdir -p "${target_folder}"
 result="$(mktemp)"
 gobin="${GOROOT}/bin/go"
 
-echo -e "\nRun tests"
-${gobin} test -v -race -cover -bench=. ./...
+echo -e "run tests"
+go test -v -race -cover -bench=. ./...
