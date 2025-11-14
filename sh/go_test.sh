@@ -1,5 +1,7 @@
 #!/bin/bash
 
+[[ -z "${GOROOT}" ]] && export GOROOT="/usr/local/bin"
+
 source_folder="${SOURCE_FOLDER}"
 [[ -z "${source_folder}" ]] && source_folder="${GITHUB_WORKSPACE}"
 
