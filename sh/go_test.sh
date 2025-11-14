@@ -1,5 +1,10 @@
 #!/bin/bash
 
+goroot="/usr/local"
+[[ -n "${GOROOT}" ]] && goroot="${goroot}"
+
+export GOROOT="${goroot}"
+
 source_folder="${SOURCE_FOLDER}"
 [[ -z "${source_folder}" ]] && source_folder="${GITHUB_WORKSPACE}"
 
