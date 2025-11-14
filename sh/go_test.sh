@@ -12,8 +12,5 @@ target_folder="$(realpath "${target_folder}")"
 
 mkdir -p "${target_folder}"
 
-result="$(mktemp)"
-gobin="${GOROOT}/bin/go"
-
 echo -e "run tests"
 go test -v -race -cover -bench=. ./...

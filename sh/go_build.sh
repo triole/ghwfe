@@ -1,5 +1,4 @@
 #!/bin/bash
-IFS=$'\n'
 architectures=(
   "darwin_arm64:GOOS=darwin GOARCH=arm64"
   "darwin_x86_64:GOOS=darwin GOARCH=amd64"
@@ -62,20 +61,19 @@ if [[ -z "${target_folder}" ]]; then
 fi
 target_folder="$(realpath "${target_folder}")"
 
-gobin="${GOROOT}/bin/go"
-goversion="$(${gobin} version | grep -Po "(?<=go)[0-9\.]+")"
+goversion="$(go version | grep -Po "(?<=go)[0-9\.]+")"
 
-debug="false"
+dryrun="false"
 for val in "$@"; do
-  if [[ "${val}" =~ ^-+(d|debug)$ ]]; then
-    debug="true"
+  if [[ "${val}" =~ ^-+(n|dryrun)$ ]]; then
+    dryrun="true"
   fi
 done
 
-rcmd() {
+_rcmd() {
   cmd="$(echo ${1} | tr -d '\n' | sed 's/  \+/ /g')"
   echo -e "\n\033[0;93m${cmd}\033[0m"
-  if [[ "${debug}" == "false" ]]; then
+  if [[ "${dryrun}" == "false" ]]; then
     eval ${cmd}
   fi
 }
@@ -85,8 +83,8 @@ update_modules() {
   if [[ "${subfol_src}" == "1" ]]; then
     cd ..
   fi
-  rcmd "${gobin} mod init ${app_name}"
-  rcmd "${gobin} mod tidy"
+  _rcmd "go mod init ${app_name}"
+  _rcmd "go mod tidy"
 }
 
 cd "${source_folder}"
@@ -100,14 +98,14 @@ echo ""
 if [[ -n "${PRE_BUILD_COMMANDS}" ]]; then
   echo -e "\nGot pre build commands. Execute..."
   for cmd in $(echo ${PRE_BUILD_COMMANDS[@]} | tr ';' '\n'); do
-    rcmd "${cmd}"
+    _rcmd "${cmd}"
   done
 fi
 
 for arch in "${architectures[@]}"; do
   arch_name="$(echo "${arch}" | grep -Po ".*(?=:)" | sed -E 's|armv([0-9]+)[a-z]*|arm\1|g')"
   arch="$(echo "${arch}" | grep -Po "[^:]+$")"
-  rcmd "CGO_ENABLED=0 ${arch} ${gobin} build ${BUILD_ARGS} \
+  _rcmd "CGO_ENABLED=0 ${arch} go build ${BUILD_ARGS} \
         -o ${target_folder}/${arch_name}/${app_name} \
         -ldflags \
         \"-s -w -X 'main.BUILDTAGS={
