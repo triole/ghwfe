@@ -5,6 +5,8 @@ target_folder="/usr/local"
 
 tempfile="/tmp/golang.tar.gz"
 
+export GOROOT="${target_folder}"
+
 dryrun="false"
 for val in "$@"; do
   if [[ "${val}" =~ ^-+(n|dryrun)$ ]]; then
@@ -14,7 +16,7 @@ done
 
 _rcmd() {
   cmd=${@}
-  echo -e "\033[0;93m${cmd}\033[0m"
+  echo "${cmd}"
   if [[ "${dryrun}" == "false" ]]; then
     eval ${cmd}
   fi
