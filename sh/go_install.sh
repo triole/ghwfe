@@ -1,9 +1,8 @@
 #!/bin/bash
 
-target_folder="${1}"
-if [[ -z "${target_folder}" ]]; then
-  target_folder="${TARGET_FOLDER}"
-fi
+target_folder="/usr/local"
+[[ -n "${1}" ]] && target_folder="${1}"
+[[ -n "${TARGET_FOLDER}" ]] && target_folder="${TARGET_FOLDER}"
 
 tempfile="/tmp/golang.tar.gz"
 
