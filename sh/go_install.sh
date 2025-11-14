@@ -1,22 +1,22 @@
 #!/bin/bash
 
 target_folder="/usr/local"
-[[ -n "${1}" ]] && target_folder="${1}"
 [[ -n "${TARGET_FOLDER}" ]] && target_folder="${TARGET_FOLDER}"
 
 tempfile="/tmp/golang.tar.gz"
 
-debug="false"
+dryrun="false"
 for val in "$@"; do
-  if [[ "${val}" =~ ^-+(d|debug)$ ]]; then
-    debug="true"
+  if [[ "${val}" =~ ^-+(n|dryrun)$ ]]; then
+    dryrun="true"
   fi
 done
 
-rcmd() {
-  echo "${1}"
-  if [[ "${debug}" == "false" ]]; then
-    eval "${1}"
+_rcmd() {
+  cmd=${@}
+  echo -e "\033[0;93m${cmd}\033[0m"
+  if [[ "${dryrun}" == "false" ]]; then
+    eval ${cmd}
   fi
 }
 
@@ -30,10 +30,10 @@ get_latest_go_download_url() {
   echo "${url:0:-3}${r}"
 }
 
-rcmd "mkdir -p \"${target_folder}\""
-rcmd "curl -sL \"$(get_latest_go_download_url)\" -o \"${tempfile}\""
-rcmd "tar -xf \"${tempfile}\" --directory \"${target_folder}\" --strip-components 1"
+_rcmd mkdir -p \"${target_folder}\"
+_rcmd curl -sL \"$(get_latest_go_download_url)\" -o \"${tempfile}\"
+_rcmd tar -xf \"${tempfile}\" --directory \"${target_folder}\" --strip-components 1
 
-ls -la "${target_folder}"
-rcmd "${target_folder}/bin/go version"
+_rcmd ls -la "${target_folder}"
+_rcmd ${target_folder}/bin/go version
 sleep 3
