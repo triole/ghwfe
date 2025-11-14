@@ -1,4 +1,20 @@
 #!/bin/bash
+
+dryrun="false"
+for val in "$@"; do
+  if [[ "${val}" =~ ^-+(n|dryrun)$ ]]; then
+    dryrun="true"
+  fi
+done
+
+_rcmd() {
+  cmd=${@}
+  echo "${cmd}"
+  if [[ "${dryrun}" == "false" ]]; then
+    eval ${cmd}
+  fi
+}
+
 architectures=(
   "darwin_arm64:GOOS=darwin GOARCH=arm64"
   "darwin_x86_64:GOOS=darwin GOARCH=amd64"
@@ -62,21 +78,6 @@ fi
 target_folder="$(realpath "${target_folder}")"
 
 goversion="$(go version | grep -Po "(?<=go)[0-9\.]+")"
-
-dryrun="false"
-for val in "$@"; do
-  if [[ "${val}" =~ ^-+(n|dryrun)$ ]]; then
-    dryrun="true"
-  fi
-done
-
-_rcmd() {
-  cmd="$(echo ${1} | tr -d '\n' | sed 's/  \+/ /g')"
-  echo -e "\n\033[0;93m${cmd}\033[0m"
-  if [[ "${dryrun}" == "false" ]]; then
-    eval ${cmd}
-  fi
-}
 
 update_modules() {
   subfol_src="$(echo "${SOURCE_FOLDER}" | grep -Poc "src(/)?$")"

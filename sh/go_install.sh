@@ -1,12 +1,5 @@
 #!/bin/bash
 
-target_folder="/usr/local"
-[[ -n "${TARGET_FOLDER}" ]] && target_folder="${TARGET_FOLDER}"
-
-tempfile="/tmp/golang.tar.gz"
-
-export GOROOT="${target_folder}"
-
 dryrun="false"
 for val in "$@"; do
   if [[ "${val}" =~ ^-+(n|dryrun)$ ]]; then
@@ -21,6 +14,13 @@ _rcmd() {
     eval ${cmd}
   fi
 }
+
+target_folder="/usr/local"
+[[ -n "${TARGET_FOLDER}" ]] && target_folder="${TARGET_FOLDER}"
+
+tempfile="/tmp/golang.tar.gz"
+
+export GOROOT="${target_folder}"
 
 get_latest_go_download_url() {
   url="https://golang.org/dl"
@@ -38,4 +38,4 @@ _rcmd tar -xf \"${tempfile}\" --directory \"${target_folder}\" --strip-component
 
 _rcmd ls -la "${target_folder}"
 _rcmd ${target_folder}/bin/go version
-sleep 3
+sleep 2

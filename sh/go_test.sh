@@ -1,9 +1,24 @@
 #!/bin/bash
 
-goroot="/usr/local"
-[[ -n "${GOROOT}" ]] && goroot="${goroot}"
+dryrun="false"
+for val in "$@"; do
+  if [[ "${val}" =~ ^-+(n|dryrun)$ ]]; then
+    dryrun="true"
+  fi
+done
 
-export GOROOT="${goroot}"
+_rcmd() {
+  cmd=${@}
+  echo "${cmd}"
+  if [[ "${dryrun}" == "false" ]]; then
+    eval ${cmd}
+  fi
+}
+
+go_root="/usr/local"
+[[ -n "${GOROOT}" ]] && go_root="${goroot}"
+
+export GOROOT="${go_root}"
 
 source_folder="${SOURCE_FOLDER}"
 [[ -z "${source_folder}" ]] && source_folder="${GITHUB_WORKSPACE}"
@@ -17,5 +32,4 @@ target_folder="$(realpath "${target_folder}")"
 
 mkdir -p "${target_folder}"
 
-echo -e "run tests"
-go test -v -race -cover -bench=. ./...
+_rcmd go test -v -race -cover -bench=. ./...
