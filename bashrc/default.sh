@@ -38,27 +38,30 @@ if [[ $(id -u) -eq 0 ]]; then
 fi
 export PS1="\$(get_exit_status)${ps1_prefix} \$(show_git_branch) ${ps1_suffix}"
 
+# keep-sorted start
 alias ..="cd .."
 alias addgrp="usermod -a -G"
 alias addusr="useradd"
 alias cl="clear"
-alias dml="$(autosudo) dmesg | less"
 alias dmg=$(autosudo)' dmesg | grep -i "${@}"'
+alias dml="$(autosudo) dmesg | less"
 alias env="env | sort"
 alias gita="git add"
-alias gitd="git diff"
 alias gitc="git commit -m"
+alias gitd="git diff"
 alias gitl="git log"
 alias gitp="git pull"
 alias gits="git status"
 alias grep="grep --color"
 alias lsblk="lsblk -o name,maj:min,ro,rm,type,size,mountpoint,label,uuid,pttype,parttypename,type,vendor,model,serial"
 alias p="python"
-alias pm="python manage.py"
+alias pca='process-compose --port 64411'
 alias pkl="pkill -9"
+alias pm="python manage.py"
 alias psa='_psa(){ if [[ -n "${1}" ]]; then ps faux | grep "${1}" | grep -v "grep.*${1}"; else ps faux; fi };_psa'
 alias tk="task"
 alias tlp="$(autosudo)netstat -tulpen"
+# keep-sorted end
 
 which micro >/dev/null 2>&1 && alias mic="micro"
 which miss >/dev/null 2>&1 && alias less="miss"
