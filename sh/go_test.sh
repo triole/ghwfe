@@ -18,8 +18,8 @@ _rcmd() {
 go_root="/usr"
 [[ -n "${GOROOT}" ]] && go_root="${GOROOT}"
 
+export GOPATH="${HOME}/go"
 export GOROOT="${go_root}"
-export GOPATH="${GOROOT}"
 
 source_folder="${GITHUB_WORKSPACE}"
 [[ -z "${source_folder}" ]] && source_folder="$(pwd)"
