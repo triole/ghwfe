@@ -20,6 +20,7 @@ target_folder="/usr"
 
 tempfile="/tmp/golang.tar.gz"
 
+export GOPATH="${HOME}/go"
 export GOROOT="${target_folder}"
 
 get_latest_go_download_url() {
@@ -39,7 +40,7 @@ _rcmd tar -xf \"${tempfile}\" --directory \"${target_folder}\" --strip-component
 _rcmd ls -la "${target_folder}"
 
 which go || {
-  echo "go install failed"
+  echo "[error] go install failed"
   exit 1
 }
 
