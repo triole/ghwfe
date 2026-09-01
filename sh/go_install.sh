@@ -37,5 +37,10 @@ _rcmd curl -sL \"$(get_latest_go_download_url)\" -o \"${tempfile}\"
 _rcmd tar -xf \"${tempfile}\" --directory \"${target_folder}\" --strip-components 1
 
 _rcmd ls -la "${target_folder}"
-_rcmd ${target_folder}/bin/go version
-sleep 2
+
+which go || {
+  echo "go install failed"
+  exit 1
+}
+
+_rcmd go version
