@@ -1,7 +1,11 @@
 #!/bin/bash
 
 dryrun="false"
+sudo=""
 for val in "$@"; do
+  if [[ "${val}" =~ ^-+(s|sudo)$ ]]; then
+    sudo="sudo "
+  fi
   if [[ "${val}" =~ ^-+(n|dryrun)$ ]]; then
     dryrun="true"
   fi
@@ -35,7 +39,7 @@ get_latest_go_download_url() {
 
 _rcmd mkdir -p \"${target_folder}\"
 _rcmd curl -sL \"$(get_latest_go_download_url)\" -o \"${tempfile}\"
-_rcmd tar -xf \"${tempfile}\" --directory \"${target_folder}\" --strip-components 1
+_rcmd ${sudo}tar -xf \"${tempfile}\" --directory \"${target_folder}\" --strip-components 1
 
 _rcmd ls -la "${target_folder}"
 
