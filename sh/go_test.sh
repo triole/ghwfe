@@ -15,7 +15,7 @@ _rcmd() {
   fi
 }
 
-go_root="/usr/local"
+go_root="/usr"
 [[ -n "${GOROOT}" ]] && go_root="${GOROOT}"
 
 export GOROOT="${go_root}"
@@ -32,4 +32,4 @@ target_folder="$(realpath "${target_folder}")"
 
 mkdir -p "${target_folder}"
 cd "${source_folder}" &&
-  _rcmd go test -vet off -v -race -cover -bench=. ./...
+  _rcmd go test -v -race -cover -bench=. ./...
