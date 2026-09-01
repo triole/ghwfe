@@ -15,7 +15,7 @@ _rcmd() {
   fi
 }
 
-target_folder="/usr/local"
+target_folder="/usr"
 [[ -n "${TARGET_FOLDER}" ]] && target_folder="${TARGET_FOLDER}"
 
 tempfile="/tmp/golang.tar.gz"
